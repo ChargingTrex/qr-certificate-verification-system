@@ -1,9 +1,9 @@
 // ================= CONFIG =================
-const SECRET_KEY = "Your_event_name";
-const PART_SHEET = "PART";
-const OC_SHEET = "OC";
-const COLLEGE_LOGO = "Your_Org_logo";
-const CLUB_LOGO = "Your_club_logo";
+const SECRET_KEY   = "CHANGE_THIS_TO_A_LONG_RANDOM_STRING";
+const PART_SHEET   = "PART";
+const OC_SHEET     = "OC";
+const COLLEGE_LOGO = "https://your-college-logo-url.png";
+const CLUB_LOGO    = "https://your-club-logo-url.png";
 // ==========================================
 
 
@@ -32,7 +32,7 @@ function processSheet(sheetName) {
   sheet.getRange(1, 7).setValue("Token");
   sheet.getRange(1, 8).setValue("QR");
 
-  const scriptUrl = "Your_script_url";
+  const scriptUrl = "YOUR_WEB_APP_URL_HERE";
 
   for (let i = 2; i <= lastRow; i++) {
 
