@@ -159,7 +159,7 @@ function testDoGet() {
 
 ## 📄 License
 
-Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
+Distributed under the MIT License. See [`LICENSE.md`](LICENSE.md) for more information. — Copyright (c) 2026 Arun Balaji S
 
 ---
 
