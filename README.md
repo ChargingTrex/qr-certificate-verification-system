@@ -165,4 +165,4 @@ Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information
 
 ## 🏫 Credits
 
-Built for **SAI FOSS 2026** — Open Source event by the SAI FOSS Club.
+Built for **SAIU FOSS 2026** — Open Source event by the SAIU FOSS Club.
