@@ -2,6 +2,7 @@
 const SECRET_KEY   = "CHANGE_THIS_TO_A_LONG_RANDOM_STRING";
 const PART_SHEET   = "PART";
 const OC_SHEET     = "OC";
+const WINNER_SHEET = "WINNER";
 const COLLEGE_LOGO = "https://your-college-logo-url.png";
 const CLUB_LOGO    = "https://your-club-logo-url.png";
 // ==========================================
@@ -58,6 +59,7 @@ function generateAllQRs() {
   processSheet(PART_SHEET);
   processSheet(OC_SHEET);
 }
+
 function verifyToken(token) {
   try {
     const decoded = Utilities.newBlob(
@@ -80,6 +82,24 @@ function verifyToken(token) {
   } catch (e) {
     return null;
   }
+}
+
+// ===== CHECK IF WINNER =====
+function checkWinner(certId) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(WINNER_SHEET);
+  if (!sheet) return null;
+
+  const data = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] == certId) {
+      return {
+        stream:   data[i][2],  // Column C — Level
+        position: data[i][3]   // Column D — Position (Winner / Runner)
+      };
+    }
+  }
+  return null;
 }
 
 function doGet(e) {
@@ -115,6 +135,7 @@ function doGet(e) {
         const typeBadge = sheets[s] === "OC"
           ? "Organising Committee"
           : "Participation";
+          const winner = checkWinner(certId);
 
         return HtmlService.createHtmlOutput(`
 <!DOCTYPE html>
@@ -252,6 +273,24 @@ function doGet(e) {
     color: #aaa;
     text-align: center;
   }
+
+  .winner-block {
+    background: linear-gradient(135deg, #fff8e1, #fff3cd);
+    border-left: 5px solid #f9a825;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .winner-block .trophy { font-size: 36px; margin-bottom: 4px; }
+  .winner-block .winner-title { font-size: 18px; font-weight: 700; color: #e65100; margin: 0 0 10px; }
+  .winner-block .winner-row { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+  .winner-block .winner-item { display: flex; flex-direction: column; align-items: center; }
+  .winner-block .winner-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #888; margin-bottom: 4px; }
+  .winner-stream { font-size: 14px; font-weight: 600; color: #333; }
+  .winner-badge.gold { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; border-radius: 20px; padding: 4px 14px; font-size: 13px; font-weight: 600; }
+  .winner-badge.silver { background: #f5f5f5; color: #546e7a; border: 1px solid #cfd8dc; border-radius: 20px; padding: 4px 14px; font-size: 13px; font-weight: 600; }
+
 </style>
 </head>
 
@@ -272,6 +311,22 @@ function doGet(e) {
   <div class="card">
 
     <div class="valid">✅ Certificate Verified</div>
+    ${winner ? `
+    <div class="winner-block ${String(winner.position).toLowerCase().includes('runner') ? 'silver' : ''}">
+      <div class="trophy">${String(winner.position).toLowerCase().includes('runner') ? '🥈' : '🏆'}</div>
+      <p class="winner-title">${winner.position} Certificate</p>
+      <div class="winner-row">
+        <div class="winner-item">
+          <span class="winner-label">Level</span>
+          <span class="winner-stream">${winner.stream}</span>
+        </div>
+        <div class="winner-item">
+          <span class="winner-label">Position</span>
+          <span class="winner-badge ${String(winner.position).toLowerCase().includes('runner') ? 'silver' : 'gold'}">${winner.position}</span>
+        </div>
+      </div>
+    </div>
+    ` : ''}
 
     <!-- ── Highlighted: Name, PRN, Academic Year ── -->
     <div class="highlight-block">

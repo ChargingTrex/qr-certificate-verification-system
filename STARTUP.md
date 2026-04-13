@@ -19,13 +19,24 @@ Before you begin, make sure you have:
 ## Step 1: Prepare the Google Sheet
 
 1. Go to [sheets.google.com](https://sheets.google.com) and create a new spreadsheet.
-2. At the bottom, create **two tabs** and name them exactly:
+2. At the bottom, create **two mandatory tabs** and name them exactly:
    - `PART` — for Participation certificates
    - `OC` — for Organising Committee certificates
 
    > ⚠️ Names are case-sensitive. `part` or `Part` will **not** work.
 
-3. In **both** sheets, set up the column headers in **Row 1** exactly in this order:
+3. ***(Optional)*** Create a third tab named exactly **`WINNER`** to display award badges on the verification portal:
+
+   | Column | Header | Description |
+   |--------|--------|-------------|
+   | A | ID | Certificate ID — must match an ID in `PART` or `OC` |
+   | B | Name | Student Full Name *(for reference only)* |
+   | C | Stream (Level) | Level/stream of competition (e.g., `National`, `State`) |
+   | D | Position | Use `Winner` for 🏆 gold badge, or any text containing `runner` for 🥈 silver |
+
+   > If the `WINNER` sheet is absent, the system works normally — winner badges are simply not shown.
+
+4. In **both** `PART` and `OC` sheets, set up the column headers in **Row 1** exactly in this order:
 
    | Column | Header |
    |--------|--------|
@@ -59,6 +70,7 @@ At the very top of the script, update the `CONFIG` section with your own values:
 const SECRET_KEY   = "CHANGE_THIS_TO_A_LONG_RANDOM_STRING";
 const PART_SHEET   = "PART";
 const OC_SHEET     = "OC";
+const WINNER_SHEET = "WINNER";
 const COLLEGE_LOGO = "https://your-college-logo-url.png";
 const CLUB_LOGO    = "https://your-club-logo-url.png";
 // ==========================================
@@ -69,6 +81,7 @@ const CLUB_LOGO    = "https://your-club-logo-url.png";
 | `SECRET_KEY` | A long, random secret string used to sign tokens. **Keep this private.** |
 | `PART_SHEET` | Name of the Participation sheet tab (default: `PART`) |
 | `OC_SHEET` | Name of the OC sheet tab (default: `OC`) |
+| `WINNER_SHEET` | Name of the optional Winner sheet tab (default: `WINNER`) |
 | `COLLEGE_LOGO` | Public URL to your college logo image |
 | `CLUB_LOGO` | Public URL to your club logo image |
 
@@ -168,6 +181,7 @@ Whenever you add new rows or change existing data:
 | `❌ Invalid or Tampered Certificate` | Token was modified or wrong `SECRET_KEY` | Regenerate QR codes with `generateAllQRs()` |
 | QR column shows `#ERROR!` | Image URL is malformed | Check that `scriptUrl` is correctly set and rerun `generateAllQRs()` |
 | Logos not showing on verification page | Logo URLs are not publicly accessible | Set Google Drive sharing to *"Anyone with the link"* |
+| Winner badge not showing on verified page | ID not found in `WINNER` sheet, or sheet is missing | Ensure the `WINNER` tab exists and Column A ID exactly matches the certificate ID |
 
 ---
 
